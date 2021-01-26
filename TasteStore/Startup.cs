@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TasteStore.DataAccess;
+using TasteStore.DataAccess.Data.Repository;
+using TasteStore.DataAccess.Data.Repository.Interfaces;
 
 namespace TasteStore
 {
@@ -26,6 +28,8 @@ namespace TasteStore
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // We can just use the basic MVC along with the Razor Pages
             services.AddMvc(options => options.EnableEndpointRouting = false)

@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasteStore", "TasteStore\TasteStore.csproj", "{C3E3ABB4-3B2C-450C-B970-E67A30F93018}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasteStore.DataAccess", "TasteStore.DataAccess\TasteStore.DataAccess.csproj", "{262CAEF9-9104-40B3-930B-080D2882401B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasteStore.DataAccess", "TasteStore.DataAccess\TasteStore.DataAccess.csproj", "{262CAEF9-9104-40B3-930B-080D2882401B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasteStore.Models", "TasteStore.Models\TasteStore.Models.csproj", "{5E22B4B0-5E8C-4072-99DF-52EE6C985E02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasteStore.Models", "TasteStore.Models\TasteStore.Models.csproj", "{5E22B4B0-5E8C-4072-99DF-52EE6C985E02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasteStore.Utility", "TasteStore.Utility\TasteStore.Utility.csproj", "{0DF0E1D7-0332-4879-8BD4-F6670A812D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasteStore.Utility", "TasteStore.Utility\TasteStore.Utility.csproj", "{0DF0E1D7-0332-4879-8BD4-F6670A812D48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
