@@ -7,27 +7,26 @@ $(document).ready(function () {
 function loadList() {
     dataTable = $("#DT_load").DataTable({
         "ajax": {
-            "url": "/api/category",
+            "url": "/api/foodtype",
             "type": "GET",
             "dataType": "json"
         },
         "columns": [
-            { "data": "name", "width": "40%" },
-            { "data": "displayOrder", "width": "30%" },
+            { "data": "name", "width": "70%" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                                <a href="/Admin/Category/Upsert?id=${data}" class="btn btn-success text-white" style="cursor:pointer; width:40%">
+                                <a href="/Admin/FoodType/Upsert?id=${data}" class="btn btn-success text-white" style="cursor:pointer; width:40%">
                                     <i class="far fa-edit"></i> Edit
                                 </a>
-                                <a class="btn btn-danger text-white" style="cursor:pointer; width:40%" onclick="Delete('/api/category/${data}')">
+                                <a class="btn btn-danger text-white" style="cursor:pointer; width:40%" onclick="Delete('/api/foodtype/${data}')">
                                     <i class="far fa-trash-alt"></i> Delete
                                 </a>
                             </div>`;
                 },
                 "width": "30%"
-            },
+            }
         ],
         "language": {
             "emptyTable": "No data found"

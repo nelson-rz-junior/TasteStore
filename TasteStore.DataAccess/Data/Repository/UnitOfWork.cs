@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.DataAccess.Data.Repository.IRepository;
 
 namespace TasteStore.DataAccess.Data.Repository
 {
@@ -13,9 +14,12 @@ namespace TasteStore.DataAccess.Data.Repository
         {
             _context = context;
             CategoryRepository = new CategoryRepository(_context);
+            FoodTypeRepository = new FoodTypeRepository(_context);
         }
 
         public ICategoryRepository CategoryRepository { get; private set; }
+
+        public IFoodTypeRepository FoodTypeRepository { get; private set; }
 
         public void Dispose()
         {
