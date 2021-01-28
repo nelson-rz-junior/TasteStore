@@ -31,10 +31,10 @@
                     <div class="col-9 offset-3">
                         <div class="row">
                             <div class="col-6">
-                                <button type="submit" class="btn btn-primary form-control">@(Model.FoodType.Id != 0 ? "Update" : "Create")</button>
+                                <a asp-page="./Index" class="btn btn-success form-control">Back to list</a>
                             </div>
                             <div class="col-6">
-                                <a asp-page="./Index" class="btn btn-success form-control">Back to list</a>
+                                <button type="submit" class="btn btn-primary form-control">@(Model.FoodType.Id != 0 ? "Update" : "Create")</button>
                             </div>
                         </div>
                     </div>

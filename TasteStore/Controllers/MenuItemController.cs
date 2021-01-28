@@ -43,7 +43,7 @@ namespace TasteStore.Controllers
                     });
                 }
 
-                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, menuItem.Image.TrimStart('\\'));
+                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", "menuItems", menuItem.Image);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);

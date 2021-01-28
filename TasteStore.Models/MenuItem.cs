@@ -17,7 +17,7 @@ namespace TasteStore.Models
 
         public string Image { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Price should be greater tham $1")]
+        [Range(1, int.MaxValue, ErrorMessage = "Price should be greater than $1")]
         public decimal Price { get; set; }
 
         [Display(Name = "Category type")]
