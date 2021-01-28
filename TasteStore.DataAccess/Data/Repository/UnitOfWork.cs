@@ -15,11 +15,14 @@ namespace TasteStore.DataAccess.Data.Repository
             _context = context;
             CategoryRepository = new CategoryRepository(_context);
             FoodTypeRepository = new FoodTypeRepository(_context);
+            MenuItemRepository = new MenuItemRepository(_context);
         }
 
         public ICategoryRepository CategoryRepository { get; private set; }
 
         public IFoodTypeRepository FoodTypeRepository { get; private set; }
+
+        public IMenuItemRepository MenuItemRepository { get; private set; }
 
         public void Dispose()
         {

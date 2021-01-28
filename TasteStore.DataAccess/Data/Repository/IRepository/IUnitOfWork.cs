@@ -11,6 +11,8 @@ namespace TasteStore.DataAccess.Data.Repository.Interfaces
 
         IFoodTypeRepository FoodTypeRepository { get; }
 
+        IMenuItemRepository MenuItemRepository { get; }
+
         void Save();
     }
 }
