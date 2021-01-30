@@ -34,7 +34,8 @@ function loadList() {
         "language": {
             "emptyTable": "No data found"
         },
-        "width": "100%"
+        "width": "100%",
+        "order": [[2, "asc"]]
     });
 }
 
