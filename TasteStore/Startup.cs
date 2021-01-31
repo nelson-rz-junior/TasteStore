@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using TasteStore.DataAccess;
 using TasteStore.DataAccess.Data.Repository;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Utility;
+using TasteStore.Utility.Interfaces;
 
 namespace TasteStore
 {
@@ -26,10 +28,12 @@ namespace TasteStore
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             // We can just use the basic MVC along with the Razor Pages
             services.AddMvc(options => options.EnableEndpointRouting = false)
