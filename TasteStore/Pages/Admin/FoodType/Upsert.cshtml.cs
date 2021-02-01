@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Utility;
 
 namespace TasteStore.Pages.Admin.FoodType
 {
+    [Authorize(Roles = SD.ManageRole)]
     public class UpsertModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;

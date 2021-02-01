@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,9 +7,11 @@ using System;
 using System.IO;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
 using TasteStore.Models.ViewModels;
+using TasteStore.Utility;
 
 namespace TasteStore.Pages.Admin.MenuItem
 {
+    [Authorize(Roles = SD.ManageRole)]
     public class UpsertModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
