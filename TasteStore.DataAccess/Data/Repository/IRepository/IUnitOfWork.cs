@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TasteStore.DataAccess.Data.Repository.IRepository;
 
 namespace TasteStore.DataAccess.Data.Repository.Interfaces
@@ -12,6 +10,8 @@ namespace TasteStore.DataAccess.Data.Repository.Interfaces
         IFoodTypeRepository FoodTypeRepository { get; }
 
         IMenuItemRepository MenuItemRepository { get; }
+
+        IApplicationUserRepository ApplicationUserRepository { get; }
 
         void Save();
     }
