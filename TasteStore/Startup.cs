@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using TasteStore.DataAccess;
 using TasteStore.DataAccess.Data.Repository;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Models;
 using TasteStore.Utility;
 using TasteStore.Utility.Interfaces;
 
@@ -28,7 +29,7 @@ namespace TasteStore
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
