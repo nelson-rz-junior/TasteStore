@@ -59,14 +59,19 @@ namespace TasteStore.Pages.Customer.Home
                 _unitOfWork.Save();
 
                 var totalItems = _unitOfWork.ShoppingCartRepository.GetAll(sc => sc.ApplicationUserId == ShoppingCart.ApplicationUserId)
-                    .Count();
+                    .Sum(s => s.Quantity);
 
                 HttpContext.Session.SetInt32(SD.ShoppingCart, totalItems);
 
                 return RedirectToPage("Index");
             }
+            else
+            {
+                ShoppingCart.MenuItem = _unitOfWork.MenuItemRepository
+                    .GetFirstOrDefault(includeProperties: "Category,FoodType", filter: mi => mi.Id == ShoppingCart.MenuItemId);
 
-            return Page();
+                return Page();
+            }
         }
     }
 }
