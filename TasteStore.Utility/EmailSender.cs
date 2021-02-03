@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MimeKit.Text;
 using System.Collections.Generic;
@@ -9,13 +10,20 @@ namespace TasteStore.Utility
 {
     public class EmailSender : IEmailSender
     {
+        private readonly IConfiguration _configuration;
+
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task SendEmailAsync(string name, string email, string subject, string htmlMessage)
         {
             var message = new MimeMessage();
 
             message.From.AddRange(new List<MailboxAddress>()
             {
-                new MailboxAddress(name: "Taste Store Ltda.", address: "snacks.ltda.1@gmail.com")
+                new MailboxAddress(name: "Taste Store Ltda.", address: _configuration["EmailConfiguration:SmtpUsername"])
             });
 
             message.To.AddRange(new List<MailboxAddress>()
@@ -34,7 +42,7 @@ namespace TasteStore.Utility
             {
                 emailClient.Connect("smtp.gmail.com", 465, true);
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
-                emailClient.Authenticate("snacks.ltda.1@gmail.com", "@Passw0rd");
+                emailClient.Authenticate(_configuration["EmailConfiguration:SmtpUsername"], _configuration["EmailConfiguration:SmtpPassword"]);
 
                 await emailClient.SendAsync(message);
 
