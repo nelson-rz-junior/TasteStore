@@ -11,5 +11,17 @@ namespace TasteStore.DataAccess.Data.Repository
         {
             _context = context;
         }
+
+        public int IncrementQuantity(ShoppingCart shoppingCart, int quantity)
+        {
+            shoppingCart.Quantity += quantity;
+            return shoppingCart.Quantity;
+        }
+
+        public int DecrementQuantity(ShoppingCart shoppingCart, int quantity)
+        {
+            shoppingCart.Quantity -= quantity;
+            return shoppingCart.Quantity;
+        }
     }
 }

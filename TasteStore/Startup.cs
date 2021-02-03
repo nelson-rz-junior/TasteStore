@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using TasteStore.DataAccess;
 using TasteStore.DataAccess.Data.Repository;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
@@ -43,6 +44,13 @@ namespace TasteStore
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Identity/Account/Login";
@@ -68,6 +76,7 @@ namespace TasteStore
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
