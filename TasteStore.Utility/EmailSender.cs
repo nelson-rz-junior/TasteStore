@@ -21,9 +21,16 @@ namespace TasteStore.Utility
         {
             var message = new MimeMessage();
 
+            // PM> dotnet user-secrets init --project "Path to project"
+            // PM> dotnet user-secrets set "EmailConfiguration:SmtpUsername" "xxxxx" --project "Project file system path"
+            // PM> dotnet user-secrets set "EmailConfiguration:SmtpPassword" "xxxxx" --project "Project file system path"
+
+            string smtpUsername = _configuration["EmailConfiguration:SmtpUsername"];
+            string smtpPassword = _configuration["EmailConfiguration:SmtpPassword"];
+
             message.From.AddRange(new List<MailboxAddress>()
             {
-                new MailboxAddress(name: "Taste Store Ltda.", address: _configuration["EmailConfiguration:SmtpUsername"])
+                new MailboxAddress(name: "Taste Store Ltda.", address: smtpUsername)
             });
 
             message.To.AddRange(new List<MailboxAddress>()
@@ -42,7 +49,7 @@ namespace TasteStore.Utility
             {
                 emailClient.Connect("smtp.gmail.com", 465, true);
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
-                emailClient.Authenticate(_configuration["EmailConfiguration:SmtpUsername"], _configuration["EmailConfiguration:SmtpPassword"]);
+                emailClient.Authenticate(smtpUsername, smtpPassword);
 
                 await emailClient.SendAsync(message);
 
