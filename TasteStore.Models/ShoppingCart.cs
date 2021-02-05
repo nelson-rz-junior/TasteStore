@@ -17,7 +17,6 @@ namespace TasteStore.Models
 
         public int MenuItemId { get; set; }
 
-        [NotMapped]
         [ForeignKey("MenuItemId")]
         public virtual MenuItem MenuItem { get; set; }
 

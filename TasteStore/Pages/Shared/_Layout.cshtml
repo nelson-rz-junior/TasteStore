@@ -51,7 +51,7 @@
                             var totalItems = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoppingCart);
 
                             <li>
-                                <a href="#" class="nav-link text-white-50">
+                                <a asp-page="/Customer/Cart/Index" class="nav-link text-white-50">
                                     <i class="fas fa-shopping-cart"></i>&nbsp; (@totalItems)
                                 </a>
                             </li>

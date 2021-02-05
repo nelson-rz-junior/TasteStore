@@ -13,11 +13,14 @@ namespace TasteStore.DataAccess.Data.Repository
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+
             CategoryRepository = new CategoryRepository(_context);
             FoodTypeRepository = new FoodTypeRepository(_context);
             MenuItemRepository = new MenuItemRepository(_context);
             ApplicationUserRepository = new ApplicationUserRepository(_context);
             ShoppingCartRepository = new ShoppingCartRepository(_context);
+            OrderHeaderRepository = new OrderHeaderRepository(_context);
+            OrderDetailRepository = new OrderDetailRepository(_context);
         }
 
         public ICategoryRepository CategoryRepository { get; private set; }
@@ -29,6 +32,10 @@ namespace TasteStore.DataAccess.Data.Repository
         public IApplicationUserRepository ApplicationUserRepository { get; private set; }
 
         public IShoppingCartRepository ShoppingCartRepository { get; private set; }
+
+        public IOrderHeaderRepository OrderHeaderRepository { get; private set; }
+
+        public IOrderDetailRepository OrderDetailRepository { get; private set; }
 
         public void Dispose()
         {

@@ -15,6 +15,10 @@ namespace TasteStore.DataAccess.Data.Repository.Interfaces
 
         IShoppingCartRepository ShoppingCartRepository { get; }
 
+        IOrderHeaderRepository OrderHeaderRepository { get; }
+
+        IOrderDetailRepository OrderDetailRepository { get; }
+
         void Save();
     }
 }
