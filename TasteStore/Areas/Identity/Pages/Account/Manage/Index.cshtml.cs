@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TasteStore.Models;
+using System.Linq;
+using TasteStore.Utility;
+using System;
 
 namespace TasteStore.Areas.Identity.Pages.Account.Manage
 {
@@ -44,22 +47,10 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-        }
 
-        private async Task LoadAsync(ApplicationUser user)
-        {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
-
-            Input = new InputModel
-            {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhoneNumber = phoneNumber
-            };
+            [Required]
+            [Display(Name = "Role")]
+            public string Role { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -72,6 +63,24 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
 
             await LoadAsync(user);
             return Page();
+        }
+
+        private async Task LoadAsync(ApplicationUser user)
+        {
+            var userName = await _userManager.GetUserNameAsync(user);
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            Username = userName;
+
+            Input = new InputModel
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = phoneNumber,
+                Role = roles.First()
+            };
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -107,6 +116,16 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
                 {
                     StatusMessage = "Unexpected error when trying to set e-mail.";
                     return RedirectToPage();
+                }
+            }
+
+            if (User.IsInRole(SD.ManageRole))
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (!Input.Role.Equals(roles.First(), StringComparison.OrdinalIgnoreCase))
+                {
+                    await _userManager.RemoveFromRolesAsync(user, roles);
+                    await _userManager.AddToRoleAsync(user, Input.Role);
                 }
             }
 

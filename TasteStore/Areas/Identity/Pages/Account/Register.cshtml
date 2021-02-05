@@ -47,10 +47,13 @@
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="py-2">
-                            <input type="radio" name="rdUserRole" value="@SD.KitchenRole" /> @SD.KitchenRole
-                            <input type="radio" name="rdUserRole" value="@SD.CustomerRole" /> @SD.CustomerRole
-                            <input type="radio" name="rdUserRole" value="@SD.FromDeskRole" /> @SD.FromDeskRole
-                            <input type="radio" name="rdUserRole" value="@SD.ManageRole" /> @SD.ManageRole
+                            <input type="radio" asp-for="Input.UserRole" value="@SD.KitchenRole" /> @SD.KitchenRole
+                            <input type="radio" asp-for="Input.UserRole" value="@SD.CustomerRole" /> @SD.CustomerRole
+                            <input type="radio" asp-for="Input.UserRole" value="@SD.FromDeskRole" /> @SD.FromDeskRole
+                            <input type="radio" asp-for="Input.UserRole" value="@SD.ManageRole" /> @SD.ManageRole
+                            <div>
+                                <span asp-validation-for="Input.UserRole" class="text-danger"></span>
+                            </div>
                         </div>
                         <div class="py-2">
                             <button type="submit" class="btn btn-success form-control">Register</button>

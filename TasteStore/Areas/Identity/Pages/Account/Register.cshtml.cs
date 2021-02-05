@@ -69,6 +69,9 @@ namespace TasteStore.Areas.Identity.Pages.Account
 
             [Required]
             public string PhoneNumber { get; set; }
+
+            [Required(ErrorMessage = "Please supply a user role")]
+            public string UserRole { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -80,7 +83,6 @@ namespace TasteStore.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            var role = Request.Form["rdUserRole"].ToString();
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -105,7 +107,7 @@ namespace TasteStore.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, role);
+                    await _userManager.AddToRoleAsync(user, Input.UserRole);
 
                     _logger.LogInformation("User created a new account with password.");
 

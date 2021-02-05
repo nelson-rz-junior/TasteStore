@@ -26,6 +26,9 @@ namespace TasteStore.Pages.Admin.MenuItem
         [BindProperty(SupportsGet = true)]
         public MenuItemViewModel ViewModel { get; set; }
 
+        [BindProperty]
+        public IFormFileCollection UploadImage { get; set; }
+
         public IActionResult OnGet(int? id)
         {
             ViewModel = new MenuItemViewModel
@@ -50,7 +53,6 @@ namespace TasteStore.Pages.Admin.MenuItem
         public IActionResult OnPost()
         {
             string webrootPath = _hostEnvironment.WebRootPath;
-            var files = HttpContext.Request.Form.Files;
 
             if (!ModelState.IsValid)
             {
@@ -59,7 +61,7 @@ namespace TasteStore.Pages.Admin.MenuItem
 
             if (ViewModel.MenuItem.Id == 0)
             {
-                var fileName = UploadFile(webrootPath, files);
+                var fileName = UploadFile(webrootPath, UploadImage);
 
                 ViewModel.MenuItem.Image = fileName;
 
@@ -68,7 +70,7 @@ namespace TasteStore.Pages.Admin.MenuItem
             else
             {
                 var menuItem = _unitOfWork.MenuItemRepository.Get(ViewModel.MenuItem.Id);
-                if (files.Count > 0)
+                if (UploadImage.Count > 0)
                 {
                     string imagePath = Path.Combine(webrootPath, "images", "menuItems", menuItem.Image);
 
@@ -77,7 +79,7 @@ namespace TasteStore.Pages.Admin.MenuItem
                         System.IO.File.Delete(imagePath);
                     }
 
-                    var fileName = UploadFile(webrootPath, files);
+                    var fileName = UploadFile(webrootPath, UploadImage);
 
                     ViewModel.MenuItem.Image = fileName;
                 }
