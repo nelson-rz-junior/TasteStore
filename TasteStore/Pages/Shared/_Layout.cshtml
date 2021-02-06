@@ -34,14 +34,14 @@
                         @if (User.IsInRole(SD.ManageRole))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropDown" data-toggle="dropdown">
+                                <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropDown" data-toggle="dropdown">
                                     Admin
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item text-white" asp-page="/Admin/Category/Index">Category</a>
-                                    <a class="dropdown-item text-white" asp-page="/Admin/FoodType/Index">Food Type</a>
-                                    <a class="dropdown-item text-white" asp-page="/Admin/MenuItem/Index">Menu Item</a>
-                                    <a class="dropdown-item text-white" asp-page="/Admin/User/Index">Users</a>
+                                    <a class="dropdown-item" asp-page="/Admin/Category/Index">Category</a>
+                                    <a class="dropdown-item" asp-page="/Admin/FoodType/Index">Food Type</a>
+                                    <a class="dropdown-item" asp-page="/Admin/MenuItem/Index">Menu Item</a>
+                                    <a class="dropdown-item" asp-page="/Admin/User/Index">Users</a>
                                 </div>
                             </li>
                         }
@@ -51,7 +51,7 @@
                             var totalItems = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoppingCart);
 
                             <li>
-                                <a asp-page="/Customer/Cart/Index" class="nav-link text-white-50">
+                                <a asp-page="/Customer/Cart/Index" class="nav-link text-light">
                                     <i class="fas fa-shopping-cart"></i>&nbsp; (@totalItems)
                                 </a>
                             </li>
@@ -59,7 +59,7 @@
                         else
                         {
                             <li>
-                                <a href="#" class="nav-link text-white-50">
+                                <a href="#" class="nav-link text-white">
                                     <i class="fas fa-shopping-cart"></i>&nbsp; (0)
                                 </a>
                             </li>
