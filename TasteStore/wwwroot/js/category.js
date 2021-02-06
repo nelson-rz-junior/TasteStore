@@ -12,8 +12,15 @@ function loadList() {
             "dataType": "json"
         },
         "columns": [
-            { "data": "name", "width": "40%" },
-            { "data": "displayOrder", "width": "30%" },
+            { "data": "name", "width": "30%" },
+            { "data": "displayOrder", "width": "20%" },
+            {
+                "data": "backgroundColor",
+                "render": function (data) {
+                    return `<div class="text-center text-white mt-1 pt-2" style="background-color: ${data}; height: 34px;">${data}</div>`;
+                },
+                "width": "20%"
+            },
             {
                 "data": "id",
                 "render": function (data) {

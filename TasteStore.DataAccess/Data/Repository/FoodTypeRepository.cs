@@ -30,6 +30,7 @@ namespace TasteStore.DataAccess.Data.Repository
             if (currentFoodType != null)
             {
                 currentFoodType.Name = foodType.Name;
+                currentFoodType.BackgroundColor = foodType.BackgroundColor;
 
                 _context.SaveChanges();
             }

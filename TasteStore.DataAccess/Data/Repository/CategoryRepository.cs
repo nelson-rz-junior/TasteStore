@@ -31,6 +31,7 @@ namespace TasteStore.DataAccess.Data.Repository
             {
                 currentCategory.Name = category.Name;
                 currentCategory.DisplayOrder = category.DisplayOrder;
+                currentCategory.BackgroundColor = category.BackgroundColor;
 
                 _context.SaveChanges();
             }

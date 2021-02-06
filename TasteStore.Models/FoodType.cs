@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TasteStore.Models
 {
@@ -11,7 +8,11 @@ namespace TasteStore.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Food type name")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Background color")]
+        public string BackgroundColor { get; set; }
     }
 }

@@ -8,11 +8,15 @@ namespace TasteStore.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Category name")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
         [Display(Name = "Display order")]
         public int DisplayOrder { get; set; }
+
+        [Required]
+        [Display(Name = "Background color")]
+        public string BackgroundColor { get; set; }
     }
 }
