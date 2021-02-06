@@ -12,31 +12,36 @@ function loadList() {
             "dataType": "json"
         },
         "columns": [
-            { "data": "fullName", "width": "25%" },
-            { "data": "email", "width": "25%" },
-            { "data": "phoneNumber", "width": "25%" },
+            { "data": "fullName", "width": "20%" },
+            { "data": "email", "width": "20%" },
+            { "data": "phoneNumber", "width": "20%" },
             {
                 "data": { id: "id", lockoutEnd: "lockoutEnd" },
                 "render": function (data) {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
 
+                    var result = `<div class="text-center">
+                                       <a href="/Identity/Account/Manage?userId=${data.id}" class="btn btn-info text-white mr-1" style="cursor:pointer; width:30%">
+                                           <i class="far fa-edit"></i> Edit
+                                       </a>`;
+
                     if (lockout > today) {
                         // Currently user is locked
-                        return `<div class="text-center">
-                                    <a class="btn btn-danger text-white" style="cursor:pointer; width:40%" onclick="LockUnlock('${data.id}', 'unlock')">
-                                        <i class="fas fa-lock-open"></i> Unlock
-                                    </a>
-                                </div>`;
+                        result += `<a class="btn btn-danger text-white" style="cursor:pointer; width:30%" onclick="LockUnlock('${data.id}', 'unlock')">
+                                       <i class="fas fa-lock-open"></i> Unlock
+                                   </a>`;
                     }
                     else {
                         // Currently user is unlocked
-                        return `<div class="text-center">
-                                    <a class="btn btn-success text-white" style="cursor:pointer; width:40%" onclick="LockUnlock('${data.id}', 'lock')">
-                                        <i class="fas fa-lock"></i> Lock
-                                    </a>
-                                </div>`;
+                        result += `<a class="btn btn-success text-white" style="cursor:pointer; width:30%" onclick="LockUnlock('${data.id}', 'lock')">
+                                       <i class="fas fa-lock"></i> Lock
+                                   </a>`;
                     }
+
+                    result += `</div>`;
+
+                    return result;
                 },
                 "width": "30%"
             },

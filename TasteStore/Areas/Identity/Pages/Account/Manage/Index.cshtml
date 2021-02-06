@@ -31,14 +31,17 @@
                         <label asp-for="Input.Role"></label>
                     </div>
                     <div class="col-9">
-                        <input type="radio" asp-for="Input.Role" value="@SD.KitchenRole" /> @SD.KitchenRole
-                        <input type="radio" asp-for="Input.Role" value="@SD.CustomerRole" /> @SD.CustomerRole
-                        <input type="radio" asp-for="Input.Role" value="@SD.FromDeskRole" /> @SD.FromDeskRole
-                        <input type="radio" asp-for="Input.Role" value="@SD.ManageRole" /> @SD.ManageRole
-
-                        <div>
-                            <span asp-validation-for="Input.Role" class="text-danger"></span>
-                        </div>
+                        @if (User.IsInRole(SD.ManageRole))
+                        {
+                            <input type="radio" asp-for="Input.Role" value="@SD.KitchenRole" /> @SD.KitchenRole
+                            <input type="radio" asp-for="Input.Role" value="@SD.CustomerRole" /> @SD.CustomerRole
+                            <input type="radio" asp-for="Input.Role" value="@SD.FromDeskRole" /> @SD.FromDeskRole
+                            <input type="radio" asp-for="Input.Role" value="@SD.ManageRole" /> @SD.ManageRole
+                        }
+                        else
+                        {
+                            <input asp-for="Input.Role" class="form-control" disabled />
+                        }
                     </div>
                 </div>
 
@@ -81,10 +84,18 @@
                 <div class="form-group row">
                     <div class="col-9 offset-3">
                         <div class="row">
-                            <div class="col-6">
-                                <a asp-page="/Admin/User/Index" class="btn btn-success form-control">Back to list</a>
-                            </div>
-                            <div class="col-6">
+                            @{ 
+                                var isManageRole = User.IsInRole(SD.ManageRole);
+                            }
+
+                            @if (isManageRole)
+                            {
+                                <div class="col-6">
+                                    <a asp-page="/Admin/User/Index" class="btn btn-success form-control">Back to list</a>
+                                </div>
+                            }
+
+                            <div class="col-6 @(!isManageRole ? "offset-6" : "")">
                                 <button type="submit" class="btn btn-primary form-control">Update</button>
                             </div>
                         </div>

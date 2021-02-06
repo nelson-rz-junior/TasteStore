@@ -48,17 +48,27 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
-            [Required]
             [Display(Name = "Role")]
             public string Role { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string userId)
         {
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user;
+
+            if (userId != null)
+            {
+                user = _userManager.Users.Where(u => u.Id == userId)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                user = await _userManager.GetUserAsync(User);
+            }
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load user with ID '{userId ?? _userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -83,12 +93,23 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
             };
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string userId)
         {
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user;
+
+            if (userId != null)
+            {
+                user = _userManager.Users.Where(u => u.Id == userId)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                user = await _userManager.GetUserAsync(User);
+            }
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load user with ID '{userId ?? _userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -134,9 +155,14 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
 
             await _userManager.UpdateAsync(user);
 
-            await _signInManager.RefreshSignInAsync(user);
+            if (userId == null)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+            }
+
             StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
+
+            return RedirectToPage(new { userId = userId });
         }
     }
 }
