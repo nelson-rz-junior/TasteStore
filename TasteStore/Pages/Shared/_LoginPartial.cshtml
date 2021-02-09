@@ -9,7 +9,7 @@
             @{
                 var applicationUser = await UserManager.GetUserAsync(User);
             }
-            <a class="nav-link text-white mt-1" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <a class="nav-link text-white" style="margin-top:2px;" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 Hello <strong>@applicationUser.FirstName @applicationUser.LastName</strong>!
             </a>
         </li>
