@@ -14,6 +14,7 @@ using TasteStore.Utility.Interfaces;
 using Microsoft.Extensions.Logging;
 using TasteStore.Models;
 using TasteStore.Utility;
+using System.Security.Claims;
 
 namespace TasteStore.Areas.Identity.Pages.Account
 {
@@ -70,7 +71,6 @@ namespace TasteStore.Areas.Identity.Pages.Account
             [Required]
             public string PhoneNumber { get; set; }
 
-            [Required(ErrorMessage = "Please supply a user role")]
             public string UserRole { get; set; }
         }
 
@@ -107,7 +107,7 @@ namespace TasteStore.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, Input.UserRole);
+                    await _userManager.AddToRoleAsync(user, Input.UserRole ?? "Customer");
 
                     _logger.LogInformation("User created a new account with password.");
 
@@ -135,7 +135,12 @@ namespace TasteStore.Areas.Identity.Pages.Account
                         }
                         else
                         {
-                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                            if (user.Id == currentUserId)
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                            }
+                            
                             return LocalRedirect(returnUrl);
                         }
                     }

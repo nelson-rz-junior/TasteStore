@@ -12,7 +12,7 @@
             <div class="col-8 offset-2">
                 <div class="card">
                     <div class="card-body px-lg-5 pt-4">
-                        <h3 class="col-12 text-success text-center py-4">
+                        <h3 class="col-12 text-success text-center">
                             <strong>Sign up</strong>
                         </h3>
                         <hr />
@@ -46,15 +46,20 @@
                             <input type="password" asp-for="Input.ConfirmPassword" autocomplete="off" placeholder="Confirm Password" class="form-control" />
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
-                        <div class="py-2">
-                            <input type="radio" asp-for="Input.UserRole" value="@SD.KitchenRole" /> @SD.KitchenRole
-                            <input type="radio" asp-for="Input.UserRole" value="@SD.CustomerRole" /> @SD.CustomerRole
-                            <input type="radio" asp-for="Input.UserRole" value="@SD.FromDeskRole" /> @SD.FromDeskRole
-                            <input type="radio" asp-for="Input.UserRole" value="@SD.ManageRole" /> @SD.ManageRole
-                            <div>
-                                <span asp-validation-for="Input.UserRole" class="text-danger"></span>
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole(SD.ManageRole))
+                        {
+                            <div class="py-2">
+                                <input type="radio" asp-for="Input.UserRole" value="@SD.KitchenRole" /> @SD.KitchenRole
+                                <input type="radio" asp-for="Input.UserRole" value="@SD.CustomerRole" checked /> @SD.CustomerRole
+                                <input type="radio" asp-for="Input.UserRole" value="@SD.FromDeskRole" /> @SD.FromDeskRole
+                                <input type="radio" asp-for="Input.UserRole" value="@SD.ManageRole" /> @SD.ManageRole
+                                <div>
+                                    <span asp-validation-for="Input.UserRole" class="text-danger"></span>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                         <div class="py-2">
                             <button type="submit" class="btn btn-success form-control">Register</button>
                         </div>
