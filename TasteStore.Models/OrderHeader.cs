@@ -25,10 +25,12 @@ namespace TasteStore.Models
 
         [Required]
         [Display(Name = "Pick up date")]
+        [DataType(DataType.Date)]
         public DateTime PickupDate { get; set; }
 
         [Required]
         [Display(Name = "Pick up time")]
+        [DataType(DataType.Time)]
         public DateTime PickupTime { get; set; }
 
         public string Status { get; set; }
