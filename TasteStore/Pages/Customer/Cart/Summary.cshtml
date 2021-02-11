@@ -1,5 +1,10 @@
 ﻿@page
 @model SummaryModel
+
+@using Microsoft.Extensions.Options
+@using TasteStore.Utility
+@inject IOptions<StripeSettings> Stripe
+
 @{
     ViewData["Title"] = "Summary";
 }
@@ -56,7 +61,7 @@
                                             <label class="col-form-label">Date</label>
                                         </div>
                                         <div class="col-10">
-                                            <input id="datepicker" asp-for="@Model.DetailCart.OrderHeader.PickupDate" class="form-control" />
+                                            <input id="datepicker" asp-for="@Model.DetailCart.OrderHeader.PickupDate" type="text" value="" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group row ml-2">
@@ -64,7 +69,7 @@
                                             <label class="col-form-label">Time</label>
                                         </div>
                                         <div class="col-10">
-                                            <input id="timepicker" asp-for="@Model.DetailCart.OrderHeader.PickupTime" class="form-control" />
+                                            <input id="timepicker" asp-for="@Model.DetailCart.OrderHeader.PickupTime" type="text" value="" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group row ml-2">
@@ -103,11 +108,26 @@
                             </div>
                         </div>
                     }
-                    </div>
+                </div>
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-4 offset-md-8">
-                            <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
+                            <script src="https://checkout.stripe.com/checkout.js"
+                                    class="stripe-button"
+                                    data-key="@Stripe.Value.PublishableKey"
+                                    data-amount="@(Model.DetailCart.OrderHeader.OrderTotal * 100)"
+                                    data-name="Taste Store"
+                                    data-label="Place Order"
+                                    data-description="The best online restaurant"
+                                    data-locale="auto"
+                                    data-allow-remember-me="false"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
+
+                            <script type="text/javascript">
+                                document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';
+                            </script>
+
+                            <button type="submit" id="btnPlaceOrder" value="Place Order" class="btn btn-success form-control" onclick="return validateInputs()">Place Order</button>
                         </div>
                     </div>
                 </div>
@@ -115,3 +135,39 @@
         </div>
     </div>
 </form>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker({ minDate: 1, maxDate: "+1W", dateFormat: 'dd-mm-yy' });
+            $("#timepicker").timepicker({ minTime: '11:00', maxTime: '15:00', step: '30', timeFormat: 'H:i' });
+        });
+
+        function validateInputs() {
+            var date = document.getElementById('datepicker').value;
+            var time = document.getElementById('timepicker').value;
+            var name = document.getElementById('txtName').value;
+            var phone = document.getElementById('txtPhone').value;
+
+            if (date.toString() === '') {
+                swal("Warning", "Please select a pick up date", "warning");
+                return false;
+            }
+            else if (time.toString() === '') {
+                swal("Warning", "Please select a pick up time", "warning");
+                return false;
+            }
+            else if (name === '') {
+                swal("Warning", "Please supply a pick up name", "warning");
+                return false;
+            }
+            else if (phone === '') {
+                swal("Warning", "Please supply a pick up phone number", "warning");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

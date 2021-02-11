@@ -36,6 +36,7 @@ namespace TasteStore
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
             // We can just use the basic MVC along with the Razor Pages
             services.AddMvc(options => options.EnableEndpointRouting = false)
