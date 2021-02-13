@@ -9,12 +9,13 @@
 
         public const string ShoppingCart = "ShoppingCart";
 
-        public const string StatusSubmitted = "Submitted";
-        public const string StatusInProcess = "Being prepared";
-        public const string StatusReady = "Ready for pick up";
-        public const string StatusCompleted = "Completed";
-        public const string StatusCancelled = "Cancelled";
-        public const string StatusRefunded = "Refunded";
+        public const string OrderStatusPlaced = "Placed";
+        public const string OrderStatusSubmitted = "Submitted";
+        public const string OrderStatusInProcess = "Being prepared";
+        public const string OrderStatusReady = "Ready for pick up";
+        public const string OrderStatusCompleted = "Completed";
+        public const string OrderStatusCancelled = "Cancelled";
+        public const string OrderStatusRefunded = "Refunded";
 
         public const string PaymentStatusPending = "Pending";
         public const string PaymentStatusApproved = "Approved";
