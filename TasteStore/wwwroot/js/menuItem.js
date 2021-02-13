@@ -11,9 +11,13 @@ function loadList() {
             "type": "GET",
             "dataType": "json"
         },
+        "columnDefs": [
+            { targets: [1], className: 'dt-body-right' },
+            { targets: [2, 3], className: 'dt-body-center' }
+        ],
         "columns": [
             { "data": "name", "width": "25%" },
-            { "data": "price", "width": "15%" },
+            { "data": "price", "width": "15%", render: $.fn.dataTable.render.number('.', ',', 2, 'R$ ') },
             { "data": "category.name", "width": "15%" },
             { "data": "foodType.name", "width": "15%" },
             {

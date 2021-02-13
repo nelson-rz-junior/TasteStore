@@ -94,13 +94,13 @@
                                                 <h6 class="my-0">@item.MenuItem.Name</h6>
                                                 <small class="text-muted">Quantity: @item.Quantity</small>
                                             </div>
-                                            <span class="text-muted">$@(item.MenuItem.Price * @item.Quantity)</span>
+                                            <span class="text-muted">@((item.MenuItem.Price * item.Quantity).ToString("c"))</span>
                                         </li>
                                     }
 
                                     <li class="list-group-item d-flex justify-content-between bg-light">
-                                        <small class="text-info">Total (USD)</small>
-                                        <strong class="text-info">$@Model.DetailCart.OrderHeader.OrderTotal</strong>
+                                        <small class="text-info">Total</small>
+                                        <strong class="text-info">@Model.DetailCart.OrderHeader.OrderTotal.ToString("c")</strong>
                                     </li>
                                 </ul>
                             </div>

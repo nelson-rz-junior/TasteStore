@@ -11,6 +11,9 @@ function loadList() {
             "type": "GET",
             "dataType": "json"
         },
+        "columnDefs": [
+            { targets: [1], className: 'dt-body-center' }
+        ],
         "columns": [
             { "data": "name", "width": "30%" },
             { "data": "displayOrder", "width": "20%" },

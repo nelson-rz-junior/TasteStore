@@ -57,7 +57,7 @@ function createOrder(publishableKey) {
                 createSession(publishableKey, userId, response.orderId);
             }
             else {
-                toastr.error(saveOrderResponse.message);
+                toastr.error(response.message);
             }
         },
         error: function (xhr, textStatus, errorThrown) {

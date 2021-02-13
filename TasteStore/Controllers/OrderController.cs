@@ -148,12 +148,9 @@ namespace TasteStore.Controllers
                     PaymentMethodTypes = new List<string> { "card" },
                     LineItems = lineItems,
                     Mode = "payment",
-                    Metadata = new Dictionary<string, string> { 
-                        { "OrderId", orderHeader.Id.ToString() },
-                        { "UserId", user.Id }
-                    },
+                    Metadata = new Dictionary<string, string> { { "OrderId", orderHeader.Id.ToString() } },
                     SuccessUrl = $"{_options.SuccessUrl}?sessionId={{CHECKOUT_SESSION_ID}}",
-                    CancelUrl = _options.CancelUrl
+                    CancelUrl = $"{_options.CancelUrl}?sessionId={{CHECKOUT_SESSION_ID}}"
                 };
 
                 var service = new SessionService();

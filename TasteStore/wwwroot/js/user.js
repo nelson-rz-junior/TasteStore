@@ -11,6 +11,9 @@ function loadList() {
             "type": "GET",
             "dataType": "json"
         },
+        "columnDefs": [
+            { targets: [2], className: 'dt-body-right' }
+        ],
         "columns": [
             { "data": "fullName", "width": "20%" },
             { "data": "email", "width": "20%" },

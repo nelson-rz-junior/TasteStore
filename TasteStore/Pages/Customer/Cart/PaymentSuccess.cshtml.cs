@@ -1,24 +1,28 @@
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Stripe.Checkout;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
-using TasteStore.Models;
 using TasteStore.Utility;
 
 namespace TasteStore.Pages.Customer.Cart
 {
+    [Authorize]
     public class PaymentSuccessModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<PaymentSuccessModel> _logger;
 
-        public PaymentSuccessModel(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public PaymentSuccessModel(IUnitOfWork unitOfWork, ILogger<PaymentSuccessModel> logger)
         {
             _unitOfWork = unitOfWork;
-            _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> OnGet(string sessionId)
@@ -30,22 +34,29 @@ namespace TasteStore.Pages.Customer.Cart
                 var sessionService = new SessionService();
                 Session session = sessionService.Get(sessionId);
 
+                _logger.LogInformation($"PaymentSuccess: {JsonConvert.SerializeObject(session)}");
+
                 if (int.TryParse(session.Metadata["OrderId"], out orderId))
                 {
-                    var user = await _userManager.FindByIdAsync(session.Metadata["UserId"]);
-                    if (user != null)
+                    var claimsIdentity = (ClaimsIdentity)User.Identity;
+                    var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                    var orderHeader = _unitOfWork.OrderHeaderRepository.GetFirstOrDefault(oh => oh.UserId == claims.Value && oh.Id == orderId);
+                    if (orderHeader != null)
                     {
-                        var orderHeader = _unitOfWork.OrderHeaderRepository.GetFirstOrDefault(oh => oh.UserId == user.Id && oh.Id == orderId);
-                        if (orderHeader != null)
+                        orderHeader.CheckoutPaymentStatus = session.PaymentStatus;
+                        if (orderHeader.CheckoutPaymentStatus.Equals("paid", StringComparison.OrdinalIgnoreCase))
                         {
                             orderHeader.PaymentStatus = SD.PaymentStatusApproved;
                             orderHeader.Status = SD.OrderStatusSubmitted;
-                            orderHeader.TransactionId = session.PaymentIntentId;
                         }
                         else
                         {
                             orderHeader.PaymentStatus = SD.PaymentRejected;
                         }
+
+                        orderHeader.PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes);
+                        orderHeader.TransactionId = session.PaymentIntentId;
 
                         _unitOfWork.Save();
 

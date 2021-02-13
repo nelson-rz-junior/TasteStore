@@ -43,6 +43,10 @@ namespace TasteStore.Models
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
+        public string PaymentMethodTypes { get; set; }
+
+        public string CheckoutPaymentStatus { get; set; }
+
         public string TransactionId { get; set; }
     }
 }

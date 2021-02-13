@@ -1,18 +1,34 @@
 ﻿@page
 @model OrderConfirmationModel
+
+@using TasteStore.Utility
+
 @{
     ViewData["Title"] = "Order Confirmation";
 }
 
 <div class="container row">
-    <div class="col-12 text-center">
-        <h1 class="text-primary text-center">Order placed successfully!</h1>
-        Your order number is: @Model.orderId<br /><br />
-        <img src="~/images//lawn_leaf.jpg" width="65%" />
-    </div>
-    <div class="col-12 text-center" style="color: maroon">
-        <br />
-        Your order has placed successfully! <br />
-        Please make sure to arrive on time for hot delicious food!
-    </div>
+    @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusApproved)
+    {
+        <div class="col-12 text-center">
+            <h1 class="text-primary text-center">Order placed successfully!</h1>
+            Your order number is: @Model.OrderHeader.Id<br /><br />
+            <img src="~/images/lawn_leaf.jpg" width="65%" />
+        </div>
+        <div class="col-12 text-center" style="color: maroon">
+            <br />
+            Your order has placed successfully! <br />
+            Please make sure to arrive on time for hot delicious food!
+        </div>
+    }
+    else
+    {
+        <div class="col-12 text-center">
+            <h1 class="text-danger text-center">An error occurred while processing the transaction.</h1>
+        </div>
+        <div class="col-12 text-center" style="color: crimson">
+            <br />
+            Please order it again!
+        </div>
+    }
 </div>
