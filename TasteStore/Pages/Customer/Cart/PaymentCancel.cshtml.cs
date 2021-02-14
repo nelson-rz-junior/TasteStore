@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Stripe.Checkout;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
 using TasteStore.Utility;
 
@@ -24,7 +23,7 @@ namespace TasteStore.Pages.Customer.Cart
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnGet(string sessionId)
+        public IActionResult OnGet(string sessionId)
         {
             int orderId = 0;
 
@@ -46,7 +45,7 @@ namespace TasteStore.Pages.Customer.Cart
                         orderHeader.Status = SD.OrderStatusCancelled;
                         orderHeader.CheckoutPaymentStatus = session.PaymentStatus;
                         orderHeader.PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes);
-                        orderHeader.TransactionId = session.PaymentIntentId;
+                        orderHeader.PaymentIntentId = session.PaymentIntentId;
 
                         _unitOfWork.Save();
 

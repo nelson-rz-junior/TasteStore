@@ -1,6 +1,5 @@
 using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +55,7 @@ namespace TasteStore.Pages.Customer.Cart
                         }
 
                         orderHeader.PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes);
-                        orderHeader.TransactionId = session.PaymentIntentId;
+                        orderHeader.PaymentIntentId = session.PaymentIntentId;
 
                         _unitOfWork.Save();
 

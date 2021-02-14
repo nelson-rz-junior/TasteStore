@@ -47,6 +47,6 @@ namespace TasteStore.Models
 
         public string CheckoutPaymentStatus { get; set; }
 
-        public string TransactionId { get; set; }
+        public string PaymentIntentId { get; set; }
     }
 }
