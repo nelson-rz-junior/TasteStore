@@ -43,8 +43,8 @@ namespace TasteStore.Pages.Customer.Cart
                     var orderHeader = _unitOfWork.OrderHeaderRepository.GetFirstOrDefault(oh => oh.UserId == claims.Value && oh.Id == orderId);
                     if (orderHeader != null)
                     {
+                        orderHeader.Status = SD.OrderStatusCancelled;
                         orderHeader.CheckoutPaymentStatus = session.PaymentStatus;
-                        orderHeader.PaymentStatus = SD.PaymentRejected;
                         orderHeader.PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes);
                         orderHeader.TransactionId = session.PaymentIntentId;
 

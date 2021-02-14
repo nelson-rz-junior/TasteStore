@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model OrderConfirmationModel
 
 @using TasteStore.Utility
@@ -24,11 +24,14 @@
     else
     {
         <div class="col-12 text-center">
-            <h1 class="text-danger text-center">An error occurred while processing the transaction.</h1>
+            <h1 class="text-danger text-center">Your order has been canceled.</h1>
         </div>
-        <div class="col-12 text-center" style="color: crimson">
-            <br />
-            Please order it again!
+        <div class="col-12 text-center" style="color:green">
+            Please add items to shopping cart!
         </div>
     }
+
+    <div class="col-12 mt-4 text-center">
+        <a asp-page="/Index" class="btn btn-info pt-2 btn-sm">Continue Shopping</a>
+    </div>
 </div>

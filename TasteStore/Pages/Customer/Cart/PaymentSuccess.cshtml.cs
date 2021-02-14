@@ -25,7 +25,7 @@ namespace TasteStore.Pages.Customer.Cart
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnGet(string sessionId)
+        public IActionResult OnGet(string sessionId)
         {
             int orderId = 0;
 
