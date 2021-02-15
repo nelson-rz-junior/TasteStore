@@ -11,5 +11,7 @@
         public string CancelUrl { get; set; }
 
         public string ImagesBaseUrl { get; set; }
+
+        public string ApiBaseUrl { get; set; }
     }
 }

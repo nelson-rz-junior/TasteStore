@@ -22,14 +22,14 @@
                     Order Summary
                 </div>
                 <div class="col-6 text-right">
-                    <a asp-page="Index" class="btn btn-info pt-2 btn-sm">Back to Cart</a>
+                    <a id="back-cart-button" asp-page="Index" class="btn btn-info pt-2 btn-sm">Back to Cart</a>
                 </div>
             </div>
             <div class="card-body">
 
                 @if (hasItems)
                 {
-                    <input type="hidden" id="userId" asp-for="@Model.DetailCart.ShoppingCartItems[0].ApplicationUserId" />
+                    <input type="hidden" id="userId" asp-for="@Model.UserId" />
 
                     <div class="container rounded p-2">
                         <div class="row">
@@ -111,7 +111,7 @@
             <div class="card-footer">
                 <div class="row">
                     <div class="col-12 col-md-4 offset-md-8">
-                        <input type="button" id="btnPlaceOrder" value="Place Order" class="btn btn-success form-control" />
+                        <input type="button" id="checkout-button" value="Place Order" class="btn btn-success form-control" />
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
             $("#datepicker").datepicker({ minDate: 1, maxDate: "+1W", dateFormat: "dd-mm-yy" });
             $("#timepicker").timepicker({ minTime: '11:00', maxTime: '15:00', step: '30', timeFormat: 'H:i' });
 
-            placeOrder('@Stripe.Value.PublishableKey');
+            redirectCheckout('@Stripe.Value.PublishableKey');
         });
     </script>
 }

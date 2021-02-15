@@ -22,12 +22,14 @@ namespace TasteStore.Pages.Customer.Cart
         [BindProperty]
         public OrderDetailCartViewModel DetailCart { get; set; }
 
+        public string UserId { get; set; }
+
         public IActionResult OnGet()
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
-
             var nameClaim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            var emailClaim = claimIdentity.FindFirst(ClaimTypes.Name);
+
+            UserId = nameClaim.Value;
 
             DetailCart = new OrderDetailCartViewModel
             {
@@ -35,7 +37,7 @@ namespace TasteStore.Pages.Customer.Cart
             };
 
             DetailCart.ShoppingCartItems = _unitOfWork.ShoppingCartRepository
-                .GetAll(filter: sc => sc.ApplicationUserId == nameClaim.Value, includeProperties: "MenuItem")
+                .GetAll(filter: sc => sc.ApplicationUserId == UserId, includeProperties: "MenuItem")
                 .ToList();
 
             if (DetailCart.ShoppingCartItems != null)
@@ -43,7 +45,7 @@ namespace TasteStore.Pages.Customer.Cart
                 DetailCart.OrderHeader.OrderTotal = DetailCart.ShoppingCartItems
                     .Sum(sc => sc.MenuItem.Price * sc.Quantity);
 
-                ApplicationUser applicationUser = _unitOfWork.ApplicationUserRepository.GetFirstOrDefault(u => u.Id == nameClaim.Value);
+                ApplicationUser applicationUser = _unitOfWork.ApplicationUserRepository.GetFirstOrDefault(u => u.Id == UserId);
                 DetailCart.OrderHeader.PickupName = applicationUser.FullName;
                 DetailCart.OrderHeader.PhoneNumber = applicationUser.PhoneNumber;
             }

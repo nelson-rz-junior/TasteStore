@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TasteStore.Models
+namespace TasteStore.Utility
 {
     public class SummaryOrder
     {

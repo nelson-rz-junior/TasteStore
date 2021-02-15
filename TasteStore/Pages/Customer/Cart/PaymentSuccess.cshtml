@@ -1,2 +1,14 @@
-﻿@page
+﻿@page "{sessionId}"
 @model PaymentSuccessModel
+
+<div class="container row">
+    <div class="col-12 text-center" style="color: maroon">
+        <h1 class="text-danger text-center">Your order could not be processed</h1>
+        <code>@Model.ErrorMessage</code> <br />
+        Please contact customer service for assistance <br />
+        <a href="tel:+1123-456-7890">123-456-7890</a>
+    </div>
+    <div class="col-12 mt-4 text-center">
+        <a asp-page="/Index" class="btn btn-info pt-2 btn-sm">Continue Shopping</a>
+    </div>
+</div>

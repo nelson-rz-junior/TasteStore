@@ -29,7 +29,10 @@ function validateInputs() {
     }
 }
 
-function createOrder(publishableKey) {
+function createSession(publishableKey) {
+    document.getElementById('checkout-button').disabled = true;
+    document.getElementById('back-cart-button').classList.add("disabled");
+
     let userId = document.getElementById('userId').value;
     let pickupName = document.getElementById('txtName').value;
     let pickupDate = document.getElementById('datepicker').value;
@@ -47,36 +50,11 @@ function createOrder(publishableKey) {
     };
 
     $.ajax({
-        url: '/api/order/save',
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(saveOrderData),
-        success: function (response) {
-            if (response.success) {
-                createSession(publishableKey, userId, response.orderId);
-            }
-            else {
-                toastr.error(response.message);
-            }
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            let error = JSON.parse(xhr.responseText);
-            toastr.error(`An error occurred while creating an order: ${error.errors.$[0]}`);
-        }
-    });
-}
-
-function createSession(publishableKey, userId, orderId) {
-    $.ajax({
         url: '/api/order/stripe/createsession',
         type: 'POST',
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify({
-            userId: userId,
-            orderId: orderId
-        }),
+        data: JSON.stringify(saveOrderData),
         success: function (response) {
             if (response.success) {
                 let stripe = Stripe(publishableKey);
@@ -89,23 +67,27 @@ function createSession(publishableKey, userId, orderId) {
             }
             else {
                 toastr.error(response.message);
+                document.getElementById('checkout-button').disabled = false;
+                document.getElementById('back-cart-button').classList.remove("disabled");
             }
         },
         error: function (xhr, textStatus, errorThrown) {
             let error = JSON.parse(xhr.responseText);
             toastr.error(`An error occurred while creating a session: ${error.errors.$[0]}`);
+            document.getElementById('checkout-button').disabled = false;
+            document.getElementById('back-cart-button').classList.remove("disabled");
         }
     });
 }
 
-function placeOrder(publishableKey) {
-    let checkoutButton = document.getElementById('btnPlaceOrder');
+function redirectCheckout(publishableKey) {
+    let checkoutButton = document.getElementById('checkout-button');
 
     checkoutButton.addEventListener('click', function () {
         let validate = validateInputs();
 
         if (validate) {
-            createOrder(publishableKey);
+            createSession(publishableKey);
         }
     });
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,40 +35,133 @@ namespace TasteStore.Controllers
             StripeConfiguration.ApiKey = _options.SecretKey;
         }
 
-        [HttpPost("save")]
-        public async Task<JsonResult> Post([FromBody] SummaryOrder summaryOrder)
+        [HttpPost("stripe/createsession")]
+        public async Task<JsonResult> Post(SummaryOrder summaryOrder)
         {
             try
             {
-                _logger.LogInformation($"[HttpPost(save)] summaryOrder: {JsonConvert.SerializeObject(summaryOrder)}");
-
                 var user = await _userManager.FindByIdAsync(summaryOrder.UserId);
                 if (user == null)
                 {
-                    return new JsonResult(new { Success = false, OrderId = 0, Message = "Invalid user" });
+                    return new JsonResult(new { Success = false, Message = "Invalid user" });
                 }
 
-                var shoppingCartItems = _unitOfWork.ShoppingCartRepository.GetAll(sc => sc.ApplicationUserId == user.Id, includeProperties: "MenuItem")
+                var shoppingCartItems = _unitOfWork.ShoppingCartRepository.GetAll(filter: sc => sc.ApplicationUserId == summaryOrder.UserId, includeProperties: "MenuItem")
                     .ToList();
 
                 if (shoppingCartItems.Count == 0)
                 {
-                    return new JsonResult(new { Success = false, OrderId = 0, Message = "Empty shopping cart" });
+                    return new JsonResult(new { Success = false, Message = "Empty shopping cart" });
+                }
+
+                var lineItems = new List<SessionLineItemOptions>();
+
+                shoppingCartItems.ForEach(sc =>
+                {
+                    lineItems.Add(new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(sc.MenuItem.Price * 100),
+                            Currency = "brl",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = sc.MenuItem.Name,
+                                Description = sc.MenuItem.Description,
+                                Images = new List<string> { $"{_options.ImagesBaseUrl}/{sc.MenuItem.Image}" }
+                            }
+                        },
+                        Quantity = sc.Quantity
+                    });
+                });
+
+                var options = new SessionCreateOptions
+                {
+                    CustomerEmail = user.Email,
+                    PaymentMethodTypes = new List<string> { "card" },
+                    LineItems = lineItems,
+                    Mode = "payment",
+                    Metadata = new Dictionary<string, string> 
+                    { 
+                        { "UserId", summaryOrder.UserId },
+                        { "PickupName", summaryOrder.PickupName },
+                        { "PickupDate", summaryOrder.PickupDate.ToString() },
+                        { "PickupTime", summaryOrder.PickupTime.ToString() },
+                        { "PickupPhoneNumber", summaryOrder.PickupPhoneNumber },
+                        { "PickupComments", summaryOrder.PickupComments }
+                    },
+                    SuccessUrl = $"{_options.SuccessUrl}/{{CHECKOUT_SESSION_ID}}",
+                    CancelUrl = _options.CancelUrl
+                };
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                _logger.LogInformation($"[HttpPost(stripe/createsession)] session: {JsonConvert.SerializeObject(session)}");
+
+                return new JsonResult(new { Success = true, SessionId = session.Id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[HttpPost(stripe/createsession)]: {ex}");
+                return new JsonResult(new { Success = false, Message = "Internal server error" });
+            }
+        }
+
+        [HttpPost("save")]
+        public async Task<IActionResult> Post(CreateOrderApiRequest createOrderApiRequest)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(createOrderApiRequest.SessionId))
+                {
+                    return BadRequest("Empty session id");
+                }
+
+                var user = await _userManager.FindByIdAsync(createOrderApiRequest.UserId);
+                if (user == null)
+                {
+                    return BadRequest("Invalid user");
+                }
+
+                var sessionService = new SessionService();
+                Session session = sessionService.Get(createOrderApiRequest.SessionId);
+
+                if (session.Metadata["UserId"] != user.Id)
+                {
+                    return BadRequest("Invalid session id");
+                }
+
+                var shoppingCartItems = _unitOfWork.ShoppingCartRepository.GetAll(sc => sc.ApplicationUserId == createOrderApiRequest.UserId, includeProperties: "MenuItem")
+                    .ToList();
+
+                if (shoppingCartItems.Count == 0)
+                {
+                    return BadRequest("Empty shopping cart");
                 }
 
                 OrderHeader orderHeader = new OrderHeader
                 {
-                    UserId = user.Id,
-                    PickupName = summaryOrder.PickupName,
-                    PhoneNumber = summaryOrder.PickupPhoneNumber,
-                    PickupDate = summaryOrder.PickupDate,
-                    PickupTime = summaryOrder.PickupTime,
-                    Comments = summaryOrder.PickupComments,
+                    UserId = createOrderApiRequest.UserId,
+                    PickupName = session.Metadata["PickupName"],
+                    PhoneNumber = session.Metadata["PickupPhoneNumber"],
+                    PickupDate = DateTime.Parse(session.Metadata["PickupDate"]),
+                    PickupTime = DateTime.Parse(session.Metadata["PickupTime"]),
+                    Comments = session.Metadata["PickupComments"],
                     OrderDate = DateTime.Now,
                     OrderTotal = shoppingCartItems.Sum(sc => sc.MenuItem.Price * sc.Quantity),
                     PaymentStatus = SD.PaymentStatusPending,
-                    Status = SD.OrderStatusPlaced
+                    Status = SD.OrderStatusPlaced,
+                    CheckoutPaymentStatus = session.PaymentStatus,
+                    PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes),
+                    PaymentIntentId = session.PaymentIntentId
                 };
+
+                if (session.PaymentStatus.Equals("paid", StringComparison.OrdinalIgnoreCase))
+                {
+                    orderHeader.PaymentStatus = SD.PaymentStatusApproved;
+                    orderHeader.Status = SD.OrderStatusSubmitted;
+                }
 
                 _unitOfWork.OrderHeaderRepository.Add(orderHeader);
 
@@ -93,77 +187,13 @@ namespace TasteStore.Controllers
                 // Save changes
                 _unitOfWork.Save();
 
-                return new JsonResult(new { Success = true, OrderId = orderHeader.Id, Message = "Order created successfully" });
+                return StatusCode(StatusCodes.Status201Created, new { OrderId = orderHeader.Id, Message = "Order created successfully" });
             }
             catch (Exception ex)
             {
                 _logger.LogError($"[HttpPost(save)]: {ex}");
-                return new JsonResult(new { Success = false, OrderId = 0, Message = "An error occurred while creating an order" });
-            }
-        }
 
-        [HttpPost("stripe/createsession")]
-        public async Task<JsonResult> Post([FromBody] StripeSession stripeSession)
-        {
-            try
-            {
-                var user = await _userManager.FindByIdAsync(stripeSession.UserId);
-                if (user == null)
-                {
-                    return new JsonResult(new { Success = false, Message = "Invalid user" });
-                }
-
-                var orderHeader = _unitOfWork.OrderHeaderRepository.GetFirstOrDefault(oh => oh.UserId == stripeSession.UserId && oh.Id == stripeSession.OrderId);
-                if (orderHeader == null)
-                {
-                    return new JsonResult(new { Success = false, Message = "Invalid order" });
-                }
-
-                var lineItems = new List<SessionLineItemOptions>();
-
-                var orderDetailItems = _unitOfWork.OrderDetailRepository.GetAll(filter: od => od.OrderId == orderHeader.Id, includeProperties: "MenuItem")
-                    .ToList();
-
-                if (orderDetailItems.Count == 0)
-                {
-                    return new JsonResult(new { Success = false, Message = "Empty order list" });
-                }
-
-                orderDetailItems.ForEach(o =>
-                {
-                    lineItems.Add(new SessionLineItemOptions
-                    {
-                        Name = o.MenuItem.Name,
-                        Description = o.MenuItem.Description,
-                        Currency = "brl",
-                        Quantity = o.Quantity,
-                        Amount = (long)(o.MenuItem.Price * 100),
-                        Images = new List<string> { $"{_options.ImagesBaseUrl}/{o.MenuItem.Image}" }
-                    });
-                });
-
-                var options = new SessionCreateOptions
-                {
-                    CustomerEmail = user.Email,
-                    PaymentMethodTypes = new List<string> { "card" },
-                    LineItems = lineItems,
-                    Mode = "payment",
-                    Metadata = new Dictionary<string, string> { { "OrderId", orderHeader.Id.ToString() } },
-                    SuccessUrl = $"{_options.SuccessUrl}?sessionId={{CHECKOUT_SESSION_ID}}",
-                    CancelUrl = $"{_options.CancelUrl}?sessionId={{CHECKOUT_SESSION_ID}}"
-                };
-
-                var service = new SessionService();
-                Session session = service.Create(options);
-
-                _logger.LogInformation($"[HttpPost(stripe/createsession)] options: {JsonConvert.SerializeObject(options)}");
-
-                return new JsonResult(new { Success = true, SessionId = session.Id });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"[HttpPost(stripe/createsession)]: {ex}");
-                return new JsonResult(new { Success = false, Message = "An error occurred while creating a session" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
     }

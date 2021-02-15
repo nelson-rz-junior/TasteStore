@@ -1,13 +1,13 @@
-using System;
+using System.Net;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Stripe.Checkout;
-using TasteStore.DataAccess.Data.Repository.Interfaces;
+using Microsoft.Extensions.Options;
+using RestSharp;
 using TasteStore.Utility;
 
 namespace TasteStore.Pages.Customer.Cart
@@ -15,56 +15,47 @@ namespace TasteStore.Pages.Customer.Cart
     [Authorize]
     public class PaymentSuccessModel : PageModel
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<PaymentSuccessModel> _logger;
+        private readonly StripeSettings _options;
 
-        public PaymentSuccessModel(IUnitOfWork unitOfWork, ILogger<PaymentSuccessModel> logger)
+        public string ErrorMessage { get; set; }
+
+        public PaymentSuccessModel(ILogger<PaymentSuccessModel> logger, IOptions<StripeSettings> options)
         {
-            _unitOfWork = unitOfWork;
             _logger = logger;
+            _options = options.Value;
         }
 
-        public IActionResult OnGet(string sessionId)
+        public async Task<IActionResult> OnGet(string sessionId)
         {
-            int orderId = 0;
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (!string.IsNullOrWhiteSpace(sessionId))
+            RestClient client = new RestClient(_options.ApiBaseUrl);
+
+            RestRequest request = new RestRequest("order/save", Method.POST);
+            request.AddJsonBody(new CreateOrderApiRequest
+            { 
+                SessionId = sessionId, 
+                UserId = claims.Value
+            });
+
+            var response = await client.ExecuteAsync<CreateOrderApiResponse>(request);
+
+            if (response.Data != null && response.StatusCode == HttpStatusCode.Created)
             {
-                var sessionService = new SessionService();
-                Session session = sessionService.Get(sessionId);
+                _logger.LogInformation($"Order created successful: {response}");
 
-                _logger.LogInformation($"PaymentSuccess: {JsonConvert.SerializeObject(session)}");
+                HttpContext.Session.SetInt32(SD.ShoppingCart, 0);
 
-                if (int.TryParse(session.Metadata["OrderId"], out orderId))
-                {
-                    var claimsIdentity = (ClaimsIdentity)User.Identity;
-                    var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-                    var orderHeader = _unitOfWork.OrderHeaderRepository.GetFirstOrDefault(oh => oh.UserId == claims.Value && oh.Id == orderId);
-                    if (orderHeader != null)
-                    {
-                        orderHeader.CheckoutPaymentStatus = session.PaymentStatus;
-                        if (orderHeader.CheckoutPaymentStatus.Equals("paid", StringComparison.OrdinalIgnoreCase))
-                        {
-                            orderHeader.PaymentStatus = SD.PaymentStatusApproved;
-                            orderHeader.Status = SD.OrderStatusSubmitted;
-                        }
-                        else
-                        {
-                            orderHeader.PaymentStatus = SD.PaymentRejected;
-                        }
-
-                        orderHeader.PaymentMethodTypes = string.Join(",", session.PaymentMethodTypes);
-                        orderHeader.PaymentIntentId = session.PaymentIntentId;
-
-                        _unitOfWork.Save();
-
-                        HttpContext.Session.SetInt32(SD.ShoppingCart, 0);
-                    }
-                }
+                return RedirectToPage("/Customer/Cart/OrderConfirmation", new { id = response.Data.OrderId });
             }
 
-            return RedirectToPage("/Customer/Cart/OrderConfirmation", new { id = orderId });
+            _logger.LogInformation($"Error while creating order: {response}");
+
+            ErrorMessage = response.ErrorMessage;
+
+            return Page();
         }
     }
 }

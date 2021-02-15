@@ -8,29 +8,18 @@
 }
 
 <div class="container row">
-    @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusApproved)
-    {
-        <div class="col-12 text-center">
-            <h1 class="text-primary text-center">Order placed successfully!</h1>
-            Your order number is: @Model.OrderHeader.Id<br /><br />
-            <img src="~/images/lawn_leaf.jpg" width="65%" />
-        </div>
-        <div class="col-12 text-center" style="color: maroon">
-            <br />
-            Your order has placed successfully! <br />
-            Please make sure to arrive on time for hot delicious food!
-        </div>
-    }
-    else
-    {
-        <div class="col-12 text-center">
-            <h1 class="text-danger text-center">Your order has been canceled.</h1>
-        </div>
-        <div class="col-12 text-center" style="color:green">
-            Please add items to shopping cart!
-        </div>
-    }
-
+    <div class="col-12 text-center">
+        <h1 class="text-primary text-center">Order placed successfully!</h1>
+        Number: @Model.OrderHeader.Id<br />
+        Status: @Model.OrderHeader.Status<br />
+        Payment status: @Model.OrderHeader.PaymentStatus<br />
+        <img src="~/images/lawn_leaf.jpg" width="65%" />
+    </div>
+    <div class="col-12 text-center" style="color: maroon">
+        <br />
+        Your order has placed successfully! <br />
+        Please make sure to arrive on time for hot delicious food!
+    </div>
     <div class="col-12 mt-4 text-center">
         <a asp-page="/Index" class="btn btn-info pt-2 btn-sm">Continue Shopping</a>
     </div>
