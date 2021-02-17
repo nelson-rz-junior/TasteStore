@@ -52,6 +52,7 @@ function createSession(publishableKey) {
     $.ajax({
         url: '/api/order/stripe/createsession',
         type: 'POST',
+        headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(saveOrderData),
@@ -67,13 +68,15 @@ function createSession(publishableKey) {
             }
             else {
                 toastr.error(response.message);
+
                 document.getElementById('checkout-button').disabled = false;
                 document.getElementById('back-cart-button').classList.remove("disabled");
             }
         },
         error: function (xhr, textStatus, errorThrown) {
-            let error = JSON.parse(xhr.responseText);
-            toastr.error(`An error occurred while creating a session: ${error.errors.$[0]}`);
+            let response = xhr.responseJSON;
+            toastr.error(`An error occurred while creating a session: ${response.title}${response.traceId}`);
+
             document.getElementById('checkout-button').disabled = false;
             document.getElementById('back-cart-button').classList.remove("disabled");
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ namespace TasteStore.Controllers
         }
 
         [HttpPost("stripe/createsession")]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> Post(SummaryOrder summaryOrder)
         {
             try
