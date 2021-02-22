@@ -5,13 +5,13 @@
     ViewData["Title"] = "Register";
 }
 
-<form method="post" autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl">
-    <div class="py-4 my-4">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row form-group">
-            <div class="col-8 offset-2">
-                <div class="card">
-                    <div class="card-body px-lg-5 pt-4">
+<div class="py-4 my-4">
+    <div class="row form-group">
+        <div class="col-8 offset-2">
+            <div class="card">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="card-body px-lg-5 pt-4">
+                    <form method="post" autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl">
                         <h3 class="col-12 text-success text-center">
                             <strong>Sign up</strong>
                         </h3>
@@ -67,47 +67,42 @@
                         <p>
                             By clicking <em>Register</em> you agree to our <a asp-page="/Privacy" target="_blank">terms of service</a>
                         </p>
-                    </div>
+                    </form>
+
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <hr />
+                        <div class="row">
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <div class="col-6">
+                                    @if (provider.Name.Contains("facebook", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <button type="submit" class="btn btn-block facebook-btn" name="provider" value="@provider.Name"
+                                                title="Sign up using your @provider.DisplayName account">
+                                            <i class="fab fa-facebook-square"></i>&nbsp;&nbsp;Sign up with @provider.DisplayName
+                                        </button>
+                                    }
+                                    else if (provider.Name.Contains("microsoft", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <button type="submit" class="btn btn-block microsoft-btn" name="provider" value="@provider.Name"
+                                                title="Sign up using your @provider.DisplayName account">
+                                            <i class="fab fa-windows"></i>&nbsp;&nbsp;Sign up with @provider.DisplayName
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-primary form-control" name="provider" value="@provider.Name"
+                                                title="Sign up using your @provider.DisplayName account">
+                                            @provider.DisplayName
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
-</form>
-
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h4>Use another service to register.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
     </div>
 </div>
 

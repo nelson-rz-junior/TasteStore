@@ -37,6 +37,7 @@ namespace TasteStore.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "E-mail")]
             [EmailAddress]
             public string Email { get; set; }
 

@@ -161,17 +161,8 @@ body {
     border: 1px solid red;
 }
 
-
 #logreg-forms button[type="submit"] {
     margin-top: 10px;
-}
-
-#logreg-forms .facebook-btn {
-    background-color: #3C589C;
-}
-
-#logreg-forms .microsoft-btn {
-    background-color: #2672ec;
 }
 
 #logreg-forms .form-reset, #logreg-forms .form-signup {
@@ -189,4 +180,14 @@ body {
 .form-signup .social-login {
     width: 210px !important;
     margin: 0 auto;
+}
+
+.facebook-btn {
+    background-color: #4267b2;
+    color:#fff;
+}
+
+.microsoft-btn {
+    background-color: #1b1b1b;
+    color: #fff;
 }

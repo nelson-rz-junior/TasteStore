@@ -58,6 +58,20 @@ namespace TasteStore
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+
+            // Credentials generated at https://developers.facebook.com/
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = Configuration["Facebook:AppId"];
+                options.AppSecret = Configuration["Facebook:AppSecret"];
+            });
+
+            // Credentials generated at https://portal.azure.com/
+            services.AddAuthentication().AddMicrosoftAccount(options =>
+            {
+                options.ClientId = Configuration["Microsoft:ClientId"];
+                options.ClientSecret = Configuration["Microsoft:ClientSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
