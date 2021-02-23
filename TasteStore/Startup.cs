@@ -72,6 +72,13 @@ namespace TasteStore
                 options.ClientId = Configuration["Microsoft:ClientId"];
                 options.ClientSecret = Configuration["Microsoft:ClientSecret"];
             });
+
+            // Credentials generated at https://developers.google.com/identity/sign-in/web/sign-in
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = Configuration["Google:ClientId"];
+                options.ClientSecret = Configuration["Google:Secret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

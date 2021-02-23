@@ -17,33 +17,7 @@
 
                         @if (Model.ExternalLogins?.Count > 0)
                         {
-                            <hr />
-                            <div class="social-login pb-0 mb-0">
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    if (provider.Name.Contains("facebook", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        <button type="submit" class="btn btn-block facebook-btn" name="provider" value="@provider.Name"
-                                                title="Sign in using your @provider.DisplayName account">
-                                            <i class="fab fa-facebook-square"></i>&nbsp;&nbsp;Sign in with @provider.DisplayName
-                                        </button>
-                                    }
-                                    else if (provider.Name.Contains("microsoft", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        <button type="submit" class="btn btn-block microsoft-btn" name="provider" value="@provider.Name"
-                                                title="Sign in using your @provider.DisplayName account">
-                                            <i class="fab fa-windows"></i>&nbsp;&nbsp;Sign in with @provider.DisplayName
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button type="submit" class="btn btn-primary form-control" name="provider" value="@provider.Name"
-                                                title="Sign in using your @provider.DisplayName account">
-                                            @provider.DisplayName
-                                        </button>
-                                    }
-                                }
-                            </div>
+                            <partial name="_ExternalLogins" model="Model.ExternalLogins" />
                         }
                     </form>
 
