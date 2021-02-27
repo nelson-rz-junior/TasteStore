@@ -11,10 +11,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
     <PackageReference Include="Stripe.net" Version="39.33.0" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Data\Initializer\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TasteStore.Models\TasteStore.Models.csproj" />

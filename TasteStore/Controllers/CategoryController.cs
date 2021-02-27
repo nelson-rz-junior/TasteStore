@@ -23,6 +23,15 @@ namespace TasteStore.Controllers
         {
             return new JsonResult(new 
             { 
+                data = _unitOfWork.CategoryRepository.GetAll()
+            });
+        }
+
+        [HttpGet("dapper")]
+        public IActionResult GetByDapper()
+        {
+            return new JsonResult(new
+            {
                 data = _unitOfWork.DapperRepository.GetAll<Category>("GetAllCategories")
             });
         }

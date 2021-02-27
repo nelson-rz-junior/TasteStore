@@ -14,7 +14,14 @@
                 <div class="card-body px-lg-5 pt-4">
                     <form method="post" autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl">
                         <h3 class="col-12 text-success text-center">
-                            <strong>Sign up</strong>
+                            @if (User.IsInRole(SD.ManageRole))
+                            {
+                                <strong>Register an employee</strong>
+                            }
+                            else
+                            {
+                                <strong>Sign up</strong>
+                            }
                         </h3>
                         <hr />
                         <div class="form-row py-2">
@@ -52,7 +59,6 @@
                         {
                             <div class="py-2">
                                 <input type="radio" asp-for="Input.UserRole" value="@SD.KitchenRole" /> @SD.KitchenRole
-                                <input type="radio" asp-for="Input.UserRole" value="@SD.CustomerRole" checked /> @SD.CustomerRole
                                 <input type="radio" asp-for="Input.UserRole" value="@SD.FromDeskRole" /> @SD.FromDeskRole
                                 <input type="radio" asp-for="Input.UserRole" value="@SD.ManageRole" /> @SD.ManageRole
                                 <div>
@@ -64,15 +70,20 @@
                         <div class="py-2">
                             <button type="submit" class="btn btn-success form-control">Register</button>
                         </div>
+
+                    </form>
+
+                    @if (!User.IsInRole(SD.ManageRole))
+                    {
                         <hr />
                         <p>
                             By clicking <em>Register</em> you agree to our <a asp-page="/Privacy" target="_blank">terms of service</a>
                         </p>
-                    </form>
 
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <partial name="_ExternalLogins" model="Model.ExternalLogins" view-data="ViewData" />
-                    </form>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <partial name="_ExternalLogins" model="Model.ExternalLogins" view-data="ViewData" />
+                        </form>
+                    }
                 </div>
             </div>
         </div>

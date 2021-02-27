@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using TasteStore.DataAccess;
+using TasteStore.DataAccess.Data.Initializer;
 using TasteStore.DataAccess.Data.Repository;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
 using TasteStore.Models;
@@ -36,6 +37,7 @@ namespace TasteStore
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IEmailSender, EmailSender>();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllers();
@@ -77,7 +79,7 @@ namespace TasteStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -94,6 +96,8 @@ namespace TasteStore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
+
+            dbInitializer.Initialize();
 
             app.UseRouting();
 

@@ -143,7 +143,9 @@ namespace TasteStore.Areas.Identity.Pages.Account.Manage
             if (User.IsInRole(SD.ManageRole))
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                if (!Input.Role.Equals(roles.First(), StringComparison.OrdinalIgnoreCase))
+                var role = roles.First();
+
+                if (role != SD.CustomerRole && !Input.Role.Equals(role, StringComparison.OrdinalIgnoreCase))
                 {
                     await _userManager.RemoveFromRolesAsync(user, roles);
                     await _userManager.AddToRoleAsync(user, Input.Role);

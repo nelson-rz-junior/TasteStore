@@ -97,14 +97,6 @@ namespace TasteStore.Areas.Identity.Pages.Account
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (!await _roleManager.RoleExistsAsync(SD.ManageRole))
-                {
-                    _roleManager.CreateAsync(new IdentityRole(SD.ManageRole)).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new IdentityRole(SD.KitchenRole)).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new IdentityRole(SD.FromDeskRole)).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new IdentityRole(SD.CustomerRole)).GetAwaiter().GetResult();
-                }
-
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Input.UserRole ?? "Customer");

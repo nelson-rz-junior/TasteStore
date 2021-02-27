@@ -31,16 +31,23 @@
                         <label asp-for="Input.Role"></label>
                     </div>
                     <div class="col-9">
-                        @if (User.IsInRole(SD.ManageRole))
+                        @if (Model.Input.Role == SD.CustomerRole)
                         {
-                            <input type="radio" asp-for="Input.Role" value="@SD.KitchenRole" /> @SD.KitchenRole
-                            <input type="radio" asp-for="Input.Role" value="@SD.CustomerRole" /> @SD.CustomerRole
-                            <input type="radio" asp-for="Input.Role" value="@SD.FromDeskRole" /> @SD.FromDeskRole
-                            <input type="radio" asp-for="Input.Role" value="@SD.ManageRole" /> @SD.ManageRole
+                            <input type="hidden" asp-for="Input.Role" />
+                            <input asp-for="Input.Role" class="form-control" disabled />
                         }
                         else
                         {
-                            <input asp-for="Input.Role" class="form-control" disabled />
+                            if (User.IsInRole(SD.ManageRole))
+                            {
+                                <input type="radio" asp-for="Input.Role" value="@SD.KitchenRole" /> @SD.KitchenRole
+                                <input type="radio" asp-for="Input.Role" value="@SD.FromDeskRole" /> @SD.FromDeskRole
+                                <input type="radio" asp-for="Input.Role" value="@SD.ManageRole" /> @SD.ManageRole
+                            }
+                            else
+                            {
+                                <input asp-for="Input.Role" class="form-control" disabled />
+                            }
                         }
                     </div>
                 </div>
