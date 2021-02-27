@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Log in";
+    ViewData["SignType"] = "in";
 }
 
 <div class="py-4 my-4">
@@ -17,7 +18,7 @@
 
                         @if (Model.ExternalLogins?.Count > 0)
                         {
-                            <partial name="_ExternalLogins" model="Model.ExternalLogins" />
+                            <partial name="_ExternalLogins" model="Model.ExternalLogins" view-data="ViewData" />
                         }
                     </form>
 

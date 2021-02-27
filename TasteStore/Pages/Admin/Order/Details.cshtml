@@ -1,0 +1,128 @@
+﻿@page "{orderId}"
+
+@using TasteStore.Utility
+
+@model DetailsModel
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<form method="post">
+    <div class="border ml-1 backgroundWhite mt-4">
+        <div class="row pb-1">
+            <div class="col-12 col-md-6 ">
+                <p class="h2 text-primary">Order Details</p>
+            </div>
+            <div class="col-12 col-md-4 offset-md-2">
+                <a class="btn btn-success form-control" asp-page="Pickup">Back to Orders</a>
+            </div>
+        </div>
+        <hr />
+        <div class="row pt-2">
+            <div class="col-lg-8 col-12" style="border-right:1px solid #bbb9b9">
+                <input type="hidden" asp-for="@Model.OrderPickup.OrderHeader.Id" />
+                <div class="form-group row">
+                    <div class="col-md-2 col-12 text-primary">
+                        <label asp-for="@Model.OrderPickup.OrderHeader.PickupName"></label>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <input asp-for="@Model.OrderPickup.OrderHeader.PickupName" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2 col-12 text-primary">
+                        <label asp-for="@Model.OrderPickup.OrderHeader.ApplicationUser.Email"></label>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <input asp-for="@Model.OrderPickup.OrderHeader.ApplicationUser.Email" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2 col-12 text-primary">
+                        <label asp-for="@Model.OrderPickup.OrderHeader.ApplicationUser.PhoneNumber"></label>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <input asp-for="@Model.OrderPickup.OrderHeader.ApplicationUser.PhoneNumber" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2 col-12 text-primary">
+                        <label asp-for="@Model.OrderPickup.OrderHeader.OrderDate"></label>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <input value="@Model.OrderPickup.OrderHeader.PickupDate.ToShortDateString() @Model.OrderPickup.OrderHeader.PickupTime.ToShortTimeString()" disabled
+                               class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @{
+                        string comments = Model.OrderPickup.OrderHeader.Comments;
+                        if (string.IsNullOrWhiteSpace(comments))
+                        {
+                            comments = "No instructions";
+                        }
+                    }
+                    <div class="col-md-2 col-12 text-primary">
+                        <label asp-for="@Model.OrderPickup.OrderHeader.Comments"></label>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <textarea asp-for="@comments" disabled class="form-control" style="height: 100px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-12">
+                <h4 class="d-flex justify-content-between align-content-center mb-3">
+                    <span class="text-muted">Order ID: </span>
+                    <span class="badge badge-secondary badge-pill">@Model.OrderPickup.OrderHeader.Id</span>
+                </h4>
+                <ul class="list-group mb-3">
+
+                    @foreach (var item in Model.OrderPickup.OrderDetails)
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div>
+                                <h6 class="my-0">@item.Name</h6>
+                                <small class="text-muted">Quantity: @item.Quantity</small>
+                            </div>
+                            <span class="text-muted">@((item.Price * item.Quantity).ToString("c"))</span>
+                        </li>
+                    }
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <span class="text-info">Total (R$)</span>
+                        <strong class="text-info">@Model.OrderPickup.OrderHeader.OrderTotal</strong>
+                    </li>
+                </ul>
+
+                @if (Model.OrderPickup.OrderHeader.Status.Equals(SD.OrderStatusReady) && (User.IsInRole(SD.ManageRole) || User.IsInRole(SD.FromDeskRole)))
+                {
+                    <button type="submit" class="btn btn-success form-control" asp-page-handler="ConfirmPickup" asp-route-orderId="@Model.OrderPickup.OrderHeader.Id">
+                        <i class="far fa-thumbs-up"></i>&nbsp;&nbsp;Confirm Pickup
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" disabled class="btn btn-info form-control">@Model.OrderPickup.OrderHeader.Status</button>
+                }
+
+                @if ((User.IsInRole(SD.ManageRole) || User.IsInRole(SD.FromDeskRole)) && (Model.OrderPickup.OrderHeader.Status.Equals(SD.OrderStatusSubmitted) ||
+                   Model.OrderPickup.OrderHeader.Status.Equals(SD.OrderStatusReady) || Model.OrderPickup.OrderHeader.Status.Equals(SD.OrderStatusPlaced) ||
+                   Model.OrderPickup.OrderHeader.Status.Equals(SD.OrderStatusInProcess)))
+                {
+                    <div class="row pt-2">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-warning form-control" asp-page-handler="CancelOrder" asp-route-orderId="@Model.OrderPickup.OrderHeader.Id">
+                                <i class="fas fa-times"></i> &nbsp; Cancel Order
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-danger form-control" asp-page-handler="RefundOrder" asp-route-orderId="@Model.OrderPickup.OrderHeader.Id">
+                                <i class="fas fa-times"></i> &nbsp; Refund Order
+                            </button>
+                        </div>
+                    </div>  
+                }
+            </div>
+        </div>
+    </div>
+</form>

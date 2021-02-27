@@ -16,6 +16,7 @@ namespace TasteStore.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         [Required]
+        [Display(Name = "Pickup Date")]
         public DateTime OrderDate { get; set; }
 
         [Required]
@@ -24,11 +25,11 @@ namespace TasteStore.Models
         public decimal OrderTotal { get; set; }
 
         [Required]
-        [Display(Name = "Pick up date")]
+        [Display(Name = "Pickup date")]
         public DateTime PickupDate { get; set; }
 
         [Required]
-        [Display(Name = "Pick up time")]
+        [Display(Name = "Pickup time")]
         public DateTime PickupTime { get; set; }
 
         public string Status { get; set; }
@@ -37,7 +38,7 @@ namespace TasteStore.Models
 
         public string Comments { get; set; }
 
-        [Display(Name = "Pick up name")]
+        [Display(Name = "Pickup name")]
         public string PickupName { get; set; }
 
         [Display(Name = "Phone number")]

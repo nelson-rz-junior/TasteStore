@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +65,7 @@ namespace TasteStore.Controllers
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)(sc.MenuItem.Price * 100),
+                            UnitAmount = Convert.ToInt32(sc.MenuItem.Price * 100),
                             Currency = "brl",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {

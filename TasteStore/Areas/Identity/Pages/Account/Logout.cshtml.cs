@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using TasteStore.Models;
+using TasteStore.Utility;
 
 namespace TasteStore.Areas.Identity.Pages.Account
 {
@@ -28,6 +30,9 @@ namespace TasteStore.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+
+            HttpContext.Session.SetInt32(SD.ShoppingCart, 0);
+
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

@@ -1,0 +1,64 @@
+﻿@page
+@model PickupModel
+@{
+    ViewData["Title"] = "Order Pickup";
+}
+
+<div class="border backgroundWhite container">
+    <div class="d-flex justify-content-between mb-3">
+        <div class="p-2">
+            <h2 class="text-primary">Order Pickup</h2>
+        </div>
+        <div class="p-2">
+            @{
+                string cancelled = "";
+                string completed = "";
+                string inProcess = "";
+
+                string backgroundStyle = "bg-primary text-white";
+
+                if (Model.Status == "cancelled")
+                {
+                    cancelled = backgroundStyle;
+                }
+                else if (Model.Status == "completed")
+                {
+                    completed = backgroundStyle;
+                }
+                else
+                {
+                    inProcess = backgroundStyle;
+                }
+            }
+
+            <ul class="list-group list-group-horizontal-sm">
+                <a style="text-decoration:none;" asp-page="Pickup" asp-route-status="cancelled">
+                    <li class="list-group-item @cancelled">Cancelled</li>
+                </a>
+                <a style="text-decoration:none;" asp-page="Pickup" asp-route-status="completed">
+                    <li class="list-group-item @completed">Completed</li>
+                </a>
+                <a style="text-decoration:none;" asp-page="Pickup" asp-route-status="inProcess">
+                    <li class="list-group-item @inProcess">In process</li>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <br /><br />
+    <table id="DT_load" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>E-mail</th>
+                <th>Order Total</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/orderPickup.js"></script>
+}

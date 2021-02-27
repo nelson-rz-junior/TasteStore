@@ -3,6 +3,7 @@
 @using TasteStore.Utility
 @{
     ViewData["Title"] = "Register";
+    ViewData["SignType"] = "up";
 }
 
 <div class="py-4 my-4">
@@ -70,7 +71,7 @@
                     </form>
 
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <partial name="_ExternalLogins" model="Model.ExternalLogins" />
+                        <partial name="_ExternalLogins" model="Model.ExternalLogins" view-data="ViewData" />
                     </form>
                 </div>
             </div>

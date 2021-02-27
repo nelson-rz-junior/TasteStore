@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,12 +37,8 @@ namespace TasteStore
             services.AddSingleton<IEmailSender, EmailSender>();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
-            // We can just use the basic MVC along with the Razor Pages
-            services.AddMvc(options => options.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-            services.AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddControllers();
 
             services.AddSession(options =>
             {
@@ -100,12 +95,16 @@ namespace TasteStore
             app.UseStaticFiles();
             app.UseSession();
 
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Configure the routing to use both MVC controllers as well as the Razor Pages
-            // We have both Razor Pages and MVC embedded within itself
-            app.UseMvc();
+            app.UseEndpoints(endpoint =>
+            {
+                endpoint.MapControllers();
+                endpoint.MapRazorPages();
+            });
         }
     }
 }

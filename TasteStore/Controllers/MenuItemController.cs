@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
@@ -6,6 +7,7 @@ using TasteStore.DataAccess.Data.Repository.Interfaces;
 
 namespace TasteStore.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MenuItemController : ControllerBase

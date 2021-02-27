@@ -8,16 +8,16 @@ function validateInputs() {
     let warningMessage = '';
 
     if (pickupName === '') {
-        warningMessage = "Please enter a pick up name";
+        warningMessage = "Please enter a pickup name";
     }
     else if (pickupPhoneNumber === '') {
-        warningMessage = "Please enter a pick up phone number";
+        warningMessage = "Please enter a pickup phone number";
     }
     else if (pickupDate.toString() === '') {
-        warningMessage = "Please enter a pick up date";
+        warningMessage = "Please enter a pickup date";
     }
     else if (pickupTime.toString() === '') {
-        warningMessage = "Please enter a pick up time";
+        warningMessage = "Please enter a pickup time";
     }
 
     if (warningMessage === '') {
