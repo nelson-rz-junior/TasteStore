@@ -10,7 +10,6 @@ using TasteStore.Utility;
 
 namespace TasteStore.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderPickupController : ControllerBase

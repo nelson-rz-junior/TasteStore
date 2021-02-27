@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Utility;
 
 namespace TasteStore.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = SD.ManageRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class MenuItemController : ControllerBase

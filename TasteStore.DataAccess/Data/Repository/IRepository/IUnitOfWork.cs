@@ -19,6 +19,8 @@ namespace TasteStore.DataAccess.Data.Repository.Interfaces
 
         IOrderDetailRepository OrderDetailRepository { get; }
 
+        IDapperRepository DapperRepository { get; }
+
         void Save();
     }
 }

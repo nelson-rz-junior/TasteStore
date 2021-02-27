@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Utility;
 
 namespace TasteStore.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = SD.ManageRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class FoodTypeController : ControllerBase

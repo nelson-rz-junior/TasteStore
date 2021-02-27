@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasteStore.DataAccess.Data.Repository.Interfaces;
+using TasteStore.Models;
+using TasteStore.Utility;
 
 namespace TasteStore.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = SD.ManageRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -21,7 +23,7 @@ namespace TasteStore.Controllers
         {
             return new JsonResult(new 
             { 
-                data = _unitOfWork.CategoryRepository.GetAll() 
+                data = _unitOfWork.DapperRepository.GetAll<Category>("GetAllCategories")
             });
         }
 

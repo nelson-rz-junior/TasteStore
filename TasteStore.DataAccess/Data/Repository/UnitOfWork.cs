@@ -21,6 +21,7 @@ namespace TasteStore.DataAccess.Data.Repository
             ShoppingCartRepository = new ShoppingCartRepository(_context);
             OrderHeaderRepository = new OrderHeaderRepository(_context);
             OrderDetailRepository = new OrderDetailRepository(_context);
+            DapperRepository = new DapperRepository(_context);
         }
 
         public ICategoryRepository CategoryRepository { get; private set; }
@@ -36,6 +37,8 @@ namespace TasteStore.DataAccess.Data.Repository
         public IOrderHeaderRepository OrderHeaderRepository { get; private set; }
 
         public IOrderDetailRepository OrderDetailRepository { get; private set; }
+
+        public IDapperRepository DapperRepository { get; private set; }
 
         public void Dispose()
         {
