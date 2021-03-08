@@ -46,7 +46,7 @@ function loadList() {
 function Delete(url) {
     swal({
         title: "Are you sure you want to delete?",
-        text: "You will not able to restore the data!",
+        text: "You will not be able to restore the data!",
         icon: "warning",
         buttons: true,
         dangerMode: true
