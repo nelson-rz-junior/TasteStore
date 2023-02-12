@@ -70,7 +70,7 @@ namespace TasteStore
                 options.ClientSecret = Configuration["Microsoft:ClientSecret"];
             });
 
-            // Credentials generated at https://developers.google.com/identity/sign-in/web/sign-in
+            // Credentials generated at https://console.developers.google.com/ (snacks.ltda.1@gmail.com)
             services.AddAuthentication().AddGoogle(options =>
             {
                 options.ClientId = Configuration["Google:ClientId"];
