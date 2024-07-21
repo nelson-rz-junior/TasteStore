@@ -4,6 +4,10 @@ using TasteStore.Models;
 
 namespace TasteStore.DataAccess
 {
+    // MIGRATIONS
+    // dotnet ef migrations add InitialConfiguration --context ApplicationDbContext --startup-project D:\Projects\TasteStore\TasteStore\TasteStore.csproj
+    // dotnet ef database update --context ApplicationDbContext --startup-project D:\Projects\TasteStore\TasteStore\TasteStore.csproj
+
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

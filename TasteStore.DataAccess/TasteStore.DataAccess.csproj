@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TasteStore.Utility\TasteStore.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
